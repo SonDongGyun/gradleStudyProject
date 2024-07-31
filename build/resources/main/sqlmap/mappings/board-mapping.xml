@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.board.service.impl.BoardMapper">
+
+    <resultMap id="boardResult" type="board">
+        <id property="seq" column="seq"></id>
+        <result property="writeId" column="write_id"></result>
+        <result property="boardTitle" column="board_title"></result>
+        <result property="boardContent" column="board_Content"></result>
+        <result property="boardDate" column="board_date" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"></result>
+    </resultMap>
+
+    <select id="selectBoard" resultMap="boardResult">
+        SELECT seq, write_id, board_title, board_Content, board_date FROM example_board_gradle WHERE 1 = 1
+        <if test="seq!=null and !seq.equals('')">
+            AND seq = #{seq}
+        </if>
+    </select>
+
+    <select id="selectCountBoard" resultType="int">
+        SELECT COUNT(seq) AS boardCount FROM example_board_gradle WHERE 1 = 1
+    </select>
+
+    <select id="selectListBoard" parameterType="int" resultMap="boardResult">
+        SELECT seq, write_id, board_title, board_content, board_date
+        FROM example_board_gradle WHERE 1 = 1
+        ORDER BY seq DESC
+            LIMIT ${startRow}, ${limitRow}
+    </select>
+
+    <insert id="insertBoard" useGeneratedKeys="true" keyProperty="seq" parameterType="board">
+        INSERT into example_board_gradle(write_id, board_title, board_content, board_date)
+            VALUE(#{writeId}, #{boardTitle}, #{boardContent},  #{boardDate})
+    </insert>
+
+    <update id="updateBoard">
+        UPDATE example_board_gradle SET
+            board_title = #{boardTitle}
+                               , board_content = #{boardContent}
+                               , board_date = #{boardDate}
+        WHERE 1 = 1
+          AND seq = #{seq}
+          AND write_id = #{writeId}
+    </update>
+
+    <delete id="deleteBoard">
+        DELETE FROM example_board_gradle
+        WHERE 1 = 1
+          AND seq = #{seq}
+    </delete>
+</mapper>

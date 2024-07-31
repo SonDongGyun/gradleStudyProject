@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Spring과 MyBatis 연동 설정 -->
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+
+        <!-- 데이터베이스 연결을 위한 데이터 소스를 지정합니다. -->
+        <property name="dataSource" ref="dataSource"></property>
+
+        <!-- MyBatis의 설정 파일(sql-mapper-config.xml)의 위치를 지정합니다. -->
+        <property name="configLocation" value="classpath:/sqlmap/sql-mapper-config.xml"></property>
+
+        <!-- Mapper XML 파일의 위치를 지정 -->
+        <property name="mapperLocations" value="classpath:sqlmap/mappings/*-mapping.xml"></property>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="org.example.*.service.impl"></property>
+    </bean>
+
+</beans>

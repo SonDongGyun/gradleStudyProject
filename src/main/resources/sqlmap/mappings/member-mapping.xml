@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.member.service.impl.MemberMapper">
+
+    <resultMap id="memberResult" type="member">
+        <id property="memberUuid" column="member_uuid"></id>
+        <result property="memberId" column="member_id"></result>
+        <result property="memberPw" column="member_pw"></result>
+        <result property="memberName" column="member_name"></result>
+        <result property="memberPhone" column="member_phone"></result>
+        <result property="memberEmail" column="member_email"></result>
+        <result property="memberOtherMatters" column="member_other_matters"></result>
+        <result property="memberStatus" column="member_status"></result>
+        <result property="registryDate" column="registry_date"></result>
+    </resultMap>
+
+    <resultMap id="authorityResult" type="authority">
+        <id property="seq" column="seq"></id>
+        <result property="memberUuid" column="member_uuid"></result>
+        <result property="memberAuthority" column="member_authority"></result>
+    </resultMap>
+
+    <select id="selectDuplicateId" parameterType="member" resultType="int">
+        SELECT COUNT(member_id) AS countNumber FROM member_info WHERE 1 = 1
+        <if test="memberId!=null and !memberId.equals('')">
+            AND member_id = #{memberId}
+        </if>
+    </select>
+
+    <select id="selectMemberInfo" parameterType="String" resultMap="memberResult">
+        SELECT member_id, member_name, member_phone, member_email, member_other_matters, member_status, registry_date FROM member_info WHERE 1 = 1
+        <if test="memberUuid!=null and !memberUuid.equals('')">
+            AND member_uuid = #{memberUuid}
+        </if>
+    </select>
+
+    <insert id="insertSingUpMember" useGeneratedKeys="true" keyProperty="memberUuid" parameterType="member">
+        INSERT INTO member_info(member_uuid, member_id, member_pw, member_name, member_phone, member_email, member_other_matters, member_status)
+            VALUE(#{memberUuid}, #{memberId}, #{memberPw}, #{memberName}, #{memberPhone}, #{memberEmail}, #{memberOtherMatters}, #{memberStatus});
+    </insert>
+
+    <insert id="insetAuthoritySetting" useGeneratedKeys="true" keyProperty="seq" parameterType="authority">
+        INSERT INTO member_authority(member_uuid, member_authority)
+            VALUE(#{memberUuid}, #{memberAuthority});
+    </insert>
+
+    <select id="findByUsername" parameterType="String" resultMap="memberResult">
+        SELECT member_uuid, member_id, member_pw, member_name FROM member_info WHERE 1 = 1
+        <if test="memberId!=null and !memberId.equals('')">
+            AND member_id = #{memberId}
+        </if>
+    </select>
+
+    <select id="findAuthoritiesByUsername" parameterType="String" resultType="java.lang.String">
+        SELECT member_authority FROM member_authority WHERE 1 = 1
+        <if test="memberUuid!=null and !memberUuid.equals('')">
+            AND member_uuid = #{memberUuid}
+        </if>
+    </select>
+
+</mapper>
