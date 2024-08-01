@@ -42,7 +42,7 @@ public class MemberController {
     @Qualifier("authenticationManager")
     private AuthenticationManager authenticationManager;
 
-    @RequestMapping(value="/logIn.do", method = RequestMethod.GET)
+    @RequestMapping(value="/login.do", method = RequestMethod.GET)
     public String showLoginForm() {
         return "member/memberLogIn";
     }
@@ -69,7 +69,7 @@ public class MemberController {
 
         } catch (Exception e) {
             redirectAttributes.addAttribute("error", true);
-            return "redirect://logIn.do?logout";
+            return "redirect://login.do?logout";
         }
     }
 
@@ -159,7 +159,7 @@ public class MemberController {
             PrintWriter out = response.getWriter();
             out.println("<script type='text/javascript'>");
             out.println("alert('회원가입에 성공였습니다.\\n로그인하여 다시 사용해 주시기 바랍니다.');");
-            out.println("window.location.replace('/logIn.do')");
+            out.println("window.location.replace('/login.do')");
             out.println("</script>");
             out.flush();
         } else {

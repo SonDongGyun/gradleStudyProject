@@ -35,7 +35,6 @@ public class SecurityUserDetailsService implements UserDetailsService {
             List<String> authorities = memberDAO.findAuthoritiesByUsername(memberVO.getMemberUuid());
 
             List<GrantedAuthority> grantedAuthorities = authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-
             // getMemberUuid() : 사용자 UUID
             // getMemberPw() : 사용자의 비밀번호
             // grantedAuthorities : 사용자의 권한 목록

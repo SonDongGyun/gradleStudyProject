@@ -20,7 +20,6 @@ public class JwtLogoutSuccessHandler implements LogoutSuccessHandler {
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-
         Map<String, Object> responseBody = new HashMap<>();
 
         // 로그아웃 성공 시 JWT 토큰 파기 로직 수행

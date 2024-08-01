@@ -48,12 +48,9 @@ public class JwtTokenProvider extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-
         String requestUri = request.getRequestURI();
-
         // 특정 URL 경우에만 토큰 유효성 검사 진행
         if(isSkipAuthentication(requestUri) == true) {
-
             String token = extractToken(request);
 
             // 토큰이 유효한 경우, 컨트롤러 호출
@@ -70,7 +67,6 @@ public class JwtTokenProvider extends OncePerRequestFilter {
                 handleAuthenticationFailure(request, response);
             }
         } else {
-
             filterChain.doFilter(request, response);
         }
     }
@@ -194,7 +190,7 @@ public class JwtTokenProvider extends OncePerRequestFilter {
 
     // 토큰 파기
     protected void invalidateToken(String token) {
-
+        System.out.println(11111111);
         // 토큰이 블랙리스트에 없으면 추가
         if(tokenBlacklist.contains(token) == false) {
             tokenBlacklist.add(token);
@@ -203,12 +199,13 @@ public class JwtTokenProvider extends OncePerRequestFilter {
 
     // 토큰이 블랙리스트에 있는지 확인
     public boolean isTokenBlacklisted(String token) {
-
+        System.out.println(22222);
         return tokenBlacklist.contains(token);
     }
 
     // JWT 토큰에서 사용자 정보를 추출
     public Claims extractClaims(String token) {
+        System.out.println(333333);
         // 토큰이 블랙리스트에 있는지 확인 후, 블랙리스트에 없으면 클레임을 추출
         if(isTokenBlacklisted(token) == false) {
             return Jwts.parser()

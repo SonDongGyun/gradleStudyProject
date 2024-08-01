@@ -8,36 +8,36 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
     <!-- auto-config="false" : 로그인 폼을 직접 만들어서 사용 -->
-    <security:http auto-config="true">
+    <security:http auto-config="false">
 
         <!-- CSRF 보호 비활성화 -->
         <security:csrf disabled="true"></security:csrf>
 
         <!-- 로그인 페이지와 로그인 처리 URL 설정 -->
-        <!-- security:form-login login-page="/member/logIn.do" login-processing-url="/member/authenticationProcess.do" username-parameter="memberId" password-parameter="memberPw" default-target-url="/member/main.do" always-use-default-target="true"></security:form-login -->
+        <!--<security:form-login login-page="/member/login.do" login-processing-url="/member/authenticationProcess.do" username-parameter="memberId" password-parameter="memberPw" default-target-url="/member/main.do" always-use-default-target="true"></security:form-login>-->
 
         <!-- 로그인 페이지는 접근권한 permitAll() 설정 -->
-        <!-- security:intercept-url pattern="/member/logIn.do" access="permitAll()"></security:intercept-url -->
+        <!--<security:intercept-url pattern="/member/login.do" access="permitAll()"></security:intercept-url>-->
 
         <!-- 회원가입 페이지는 접근권한 permitAll() 설정 -->
-        <!-- security:intercept-url pattern="/member/singUp.do" access="permitAll()"></security:intercept-url -->
+        <!--<security:intercept-url pattern="/member/singUp.do" access="permitAll()"></security:intercept-url>-->
 
         <!-- 회원가입시 회원 신청 ID 중복 확인 프로세스 접근권한 permitAll() 설정 -->
-        <!-- security:intercept-url pattern="/member/duplicateId.do" access="permitAll()"></security:intercept-url -->
+        <!--<security:intercept-url pattern="/member/duplicateId.do" access="permitAll()"></security:intercept-url>-->
 
         <!-- 회원가입 로직처리 프로세스 접근권한 permitAll() 설정 -->
-        <!-- security:intercept-url pattern="/member/memberRegistry.do" access="permitAll()"></security:intercept-url -->
+        <!--<security:intercept-url pattern="/member/memberRegistry.do" access="permitAll()"></security:intercept-url>-->
 
         <!-- 인증된 사용자에 한해 isAuthenticated() 설정 -->
-        <!-- security:intercept-url pattern="/**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"></security:intercept-url -->
+        <!--<security:intercept-url pattern="/**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"></security:intercept-url>-->
 
         <!-- 로그아웃 설정 -->
-        <!-- security:logout logout-url="/member/logOut.do" logout-success-url="/member/logIn.do?logout" invalidate-session="true" delete-cookies="JSESSIONID"></security:logout -->
+        <!--<security:logout logout-url="/member/logOut.do" logout-success-url="/member/login.do?logout" invalidate-session="true" delete-cookies="JSESSIONID"></security:logout>-->
 
         <!-- 동시 세션 제어 설정 -->
-        <!-- security:session-management>
+        <security:session-management>
             <security:concurrency-control max-sessions="1" error-if-maximum-exceeded="true" expired-url="/member/login.do?expired=true"></security:concurrency-control>
-        </security:session-management -->
+        </security:session-management>
 
         <!-- API 로그인 설정 -->
         <security:form-login login-processing-url="/access/authenticationProcess.do" username-parameter="memberId" password-parameter="memberPw" authentication-success-handler-ref="authenticationSuccessHandler" authentication-failure-handler-ref="authenticationFailureHandler"></security:form-login>
