@@ -210,6 +210,7 @@ public class JwtTokenProvider extends OncePerRequestFilter {
                     .parseClaimsJws(token)
                     .getBody();
         } else {
+
             // 토큰이 블랙리스트에 있다면 유효하지 않은 토큰으로 처리
             return null;
         }
