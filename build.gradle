@@ -58,6 +58,21 @@ dependencies {
     implementation "org.springframework.security:spring-security-web:5.5.0"
     // JWT( JsonWebToken )
     implementation "io.jsonwebtoken:jjwt:0.9.1"
+    // Spring Data Redis
+    implementation "org.springframework.data:spring-data-redis:2.7.18"
+
+    // Jedis (Redis Java Client)
+    implementation "redis.clients:jedis:3.10.0"
+    // Swagger RESTFull API
+    implementation "io.springfox:springfox-core:2.9.2"
+    implementation "io.springfox:springfox-schema:2.9.2"
+    implementation "io.springfox:springfox-spi:2.9.2"
+    implementation "io.springfox:springfox-spring-web:2.9.2"
+    implementation "io.springfox:springfox-swagger2:2.9.2"
+    implementation "io.springfox:springfox-swagger-common:2.9.2"
+    implementation "io.springfox:springfox-swagger-ui:2.9.2"
+    implementation "io.swagger:swagger-annotations:1.5.20"
+    implementation "io.swagger:swagger-models:1.5.20"
 }
 
 test {

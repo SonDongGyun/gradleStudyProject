@@ -107,7 +107,6 @@
             document.querySelector("#memberPw").focus();
             return false;
         }
-
         if(validatePassword(document.querySelector("#memberPw").value) === false) {
             alert("비밀번호는 8자 이상, 20자 이하의\n대문자, 소문자, 숫자, 특수문자를 혼합한\n비밀번호만 사용이 가능합니다.");
             document.getElementById("memberPw").value = "";
@@ -215,10 +214,10 @@
         const uppercaseRegex = /[A-Z]/;
         const lowercaseRegex = /[a-z]/;
         const digitRegex = /[0-9]/;
-        const specialCharRegex = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
+        const specialCharRegex = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/g
 
         // 비밀번호 형식 검사
-        if(uppercaseRegex.test(password) === false || lowercaseRegex.test(password) === false || digitRegex.test(password) === false || specialCharRegex.test(password) === false) {
+        if(uppercaseRegex.test(password) == false || lowercaseRegex.test(password) == false || digitRegex.test(password) == false || specialCharRegex.test(password) == false) {
             return false;
         }
 

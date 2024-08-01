@@ -8,7 +8,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
     <!-- auto-config="false" : 로그인 폼을 직접 만들어서 사용 -->
-    <security:http auto-config="false">
+    <security:http auto-config="true">
 
         <!-- CSRF 보호 비활성화 -->
         <security:csrf disabled="true"></security:csrf>
@@ -44,6 +44,14 @@
 
         <!-- API 로그아웃 설정 -->
         <security:logout logout-url="/access/logOut.do" invalidate-session="true" delete-cookies="JSESSIONID" success-handler-ref="jwtLogoutSuccessHandler"></security:logout>
+
+        <!-- Swagger UI 접근 허용 설정 -->
+        <security:intercept-url pattern="/swagger-ui.html" access="permitAll()"></security:intercept-url>
+        <security:intercept-url pattern="/swagger-resources/**" access="permitAll()"></security:intercept-url>
+        <security:intercept-url pattern="/v2/api-docs" access="permitAll()"></security:intercept-url>
+        <security:intercept-url pattern="/webjars/**" access="permitAll()"></security:intercept-url>
+        <!-- 토큰 유효성 검사를 수행할 URL 패턴 설정 -->
+        <security:intercept-url pattern="/swagger/**" access="isAuthenticated()"></security:intercept-url>
 
         <!-- JwtTokenFilter를 추가하여 토큰 유효성 검사 수행 -->
         <security:custom-filter before="FILTER_SECURITY_INTERCEPTOR" ref="jwtTokenProvider"></security:custom-filter>

@@ -1,6 +1,10 @@
 package org.example.api.controller;
 
 import io.jsonwebtoken.Claims;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiImplicitParam;
 import org.example.member.service.MemberService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,10 +16,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +32,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/access")
+@Api(tags = "01. 사용자 접속 RestAPI 서비스")
 public class AccessController {
 
     @Resource(name="memberService")
@@ -41,12 +48,14 @@ public class AccessController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    @RequestMapping(value = "/authenticationProcess.do", method=RequestMethod.POST)
-    public void authenticate(HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
-        String memberId = request.getParameter("memberId");
-        String memberPw = request.getParameter("memberPw");
-
+    @RequestMapping(value="/authenticationProcess.do", method=RequestMethod.POST)
+    @ApiOperation(value="회원 인증 처리", notes="회원 인증을 수행합니다.")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="memberId", value="회원 아이디", required=true, dataTypeClass=String.class, paramType="query"),
+            @ApiImplicitParam(name="memberPw", value="회원 비밀번호", required=true, dataTypeClass=String.class, paramType="query")
+    })
+    public void authenticate(@RequestParam String memberId, @RequestParam String memberPw, @ApiIgnore RedirectAttributes redirectAttributes) {
         try {
 
             // 사용자 인증을 위한 UsernamePasswordAuthenticationToken 객체 생성
@@ -63,33 +72,9 @@ public class AccessController {
         }
     }
 
-    @RequestMapping(value = "/disconnectionProcess.do", method=RequestMethod.POST)
-    public void disconnect(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        Map<String, Object> responseBody = new HashMap<>();
-
-        // 로그아웃 성공 시 JWT 토큰 파기 로직 수행
-        String jwtToken = jwtTokenProvider.extractToken(request);
-        jwtTokenProvider.invalidateToken(jwtToken);
-
-        if(jwtTokenProvider.isTokenBlacklisted(jwtToken) == true) {
-
-            // JWT 토큰 사용이 만료 or 파기됨
-            responseBody.put("status", "success");
-            responseBody.put("message", "사용자 로그아웃");
-        } else {
-            responseBody.put("status", "failure");
-            responseBody.put("message", "로그아웃 실패");
-        }
-
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(responseBody));
-        response.getWriter().flush();
-    }
-
-
-    @RequestMapping(value="/jwtTokenValidation.do", method = RequestMethod.POST)
+    @RequestMapping(value="/jwtTokenValidation.do", method=RequestMethod.POST)
+    @ApiOperation(value="JWT 유효성 검사", notes="JWT 토큰 사용가능 유무 검사")
     public void jwtTokenValidation(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         // 스프링 시큐리티로 사용자 ID 가져오기

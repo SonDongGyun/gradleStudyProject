@@ -48,21 +48,42 @@ public class JwtTokenProvider extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String token = extractToken(request);
 
-        // 토큰이 유효한 경우, 컨트롤러 호출
-        if(StringUtils.hasText(token) == true && validateToken(token) == true) {
+        String requestUri = request.getRequestURI();
 
-            Authentication authentication = getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        // 특정 URL 경우에만 토큰 유효성 검사 진행
+        if(isSkipAuthentication(requestUri) == true) {
 
-            // 다음 필터 또는 컨트롤러로 요청 전달
-            filterChain.doFilter(request, response);
+            String token = extractToken(request);
+
+            // 토큰이 유효한 경우, 컨트롤러 호출
+            if (StringUtils.hasText(token) == true && validateToken(token) == true) {
+
+                Authentication authentication = getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                // 다음 필터 또는 컨트롤러로 요청 전달
+                filterChain.doFilter(request, response);
+            } else {
+
+                // 토큰이 유효하지 않은 경우, 인증 실패 처리
+                handleAuthenticationFailure(request, response);
+            }
         } else {
 
-            // 토큰이 유효하지 않은 경우, 인증 실패 처리
-            handleAuthenticationFailure(request, response);
+            filterChain.doFilter(request, response);
         }
+    }
+
+    // 특정 URL 요청에 대하여 JWT 토큰 인증에 대한 예외처리
+    private boolean isSkipAuthentication(String requestUri) {
+
+        // 해당 URL에 대해서만 JWT 토큰 인증을 검사함
+        List<String> skipUrls = Arrays.asList(
+                "/access/jwtTokenValidation.do"
+                , "/swagger/"
+        );
+        return skipUrls.stream().anyMatch(requestUri::startsWith);
     }
 
     // JWT 토큰 생성
@@ -132,20 +153,6 @@ public class JwtTokenProvider extends OncePerRequestFilter {
         }
     }
 
-
-    public String extractTokenFromRequest(HttpServletRequest request) {
-
-        // String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String authorizationHeader = request.getHeader("Authorization");
-
-        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            return authorizationHeader.substring(7);
-        } else {
-            return null;
-        }
-    }
-
-
     // 토큰으로부터 인증 객체 생성 로직 구현
     private Authentication getAuthentication(String token) {
 
@@ -173,9 +180,20 @@ public class JwtTokenProvider extends OncePerRequestFilter {
         response.getWriter().write("유효하지 않은 토큰 또는 만료된 토큰");
     }
 
+    public String extractTokenFromRequest(HttpServletRequest request) {
+
+        // String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7);
+        } else {
+            return null;
+        }
+    }
 
     // 토큰 파기
-    public void invalidateToken(String token) {
+    protected void invalidateToken(String token) {
 
         // 토큰이 블랙리스트에 없으면 추가
         if(tokenBlacklist.contains(token) == false) {

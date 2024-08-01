@@ -22,7 +22,6 @@ public class SecurityUserDetailsService implements UserDetailsService {
     // loadUserByUsername(String memberId)는 사용자 정보를 조회하고 `UserDetails`를 반환한다.
     @Override
     public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
-
         try {
 
             // 입력받은 사용자 ID로 사용자 UUID를 조회

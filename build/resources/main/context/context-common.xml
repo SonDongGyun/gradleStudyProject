@@ -2,17 +2,17 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="
-		http://www.springframework.org/schema/beans
-		http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context
-		http://www.springframework.org/schema/context/spring-context-4.2.xsd
-">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 스웨거 빈 등록 -->
+    <bean id="swaggerConfig" class="org.example.config.SwaggerConfig"></bean>
+    <bean id="AccessController" class="org.example.api.controller.AccessController"></bean>
+    <bean id="swaggerController" class="org.example.api.controller.SwaggerController"></bean>
 
     <!-- @Service, @Repository만 include -->
     <context:component-scan base-package="org.example.*.*" use-default-filters="true">
         <!-- Controller는 자동 스캔에 포함시키지 않는다. -->
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"></context:exclude-filter>
     </context:component-scan>
 
 </beans>
