@@ -190,7 +190,6 @@ public class JwtTokenProvider extends OncePerRequestFilter {
 
     // 토큰 파기
     protected void invalidateToken(String token) {
-        System.out.println(11111111);
         // 토큰이 블랙리스트에 없으면 추가
         if(tokenBlacklist.contains(token) == false) {
             tokenBlacklist.add(token);
@@ -199,13 +198,11 @@ public class JwtTokenProvider extends OncePerRequestFilter {
 
     // 토큰이 블랙리스트에 있는지 확인
     public boolean isTokenBlacklisted(String token) {
-        System.out.println(22222);
         return tokenBlacklist.contains(token);
     }
 
     // JWT 토큰에서 사용자 정보를 추출
     public Claims extractClaims(String token) {
-        System.out.println(333333);
         // 토큰이 블랙리스트에 있는지 확인 후, 블랙리스트에 없으면 클레임을 추출
         if(isTokenBlacklisted(token) == false) {
             return Jwts.parser()
